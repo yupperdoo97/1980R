@@ -867,14 +867,15 @@ style.innerHTML = `
 
 /* === [Estimated Support Title Container] === */
 #map_container {
-  width: 720px !important;     
-  max-width: 100% !important;
-  position: relative !important;  
-  left: -25px !important;      /* moves the left edge leftward */
+  width: 79% !important;        /* 720px ÷ 960px game window ≈ 75% */
+  max-width: 100% !important;   /* still prevent overflow */
+  position: relative !important;
+  left: -2.5% !important;       /* -25px ÷ 960px ≈ -2.5% */
 }
+
 #map_container svg {
-  width: 100% !important;        /* make SVG scale with container */
-  height: auto !important;       /* keep aspect ratio */
+  width: 100% !important;       /* SVG scales with container */
+  height: auto !important;      /* keep aspect ratio */
 }
 
 #menu_container {
@@ -892,12 +893,22 @@ style.innerHTML = `
 #menu_container::after {
   content: "";
   position: absolute;
-  top: 190px !important;        /* vertical halfway */
+  top: 47.5% !important;        /* vertical halfway */
   left: 0 !important;         /* start at left edge */
   width: 100% !important;     /* full width */
   height: 2px !important;    /* thin line */
   background-color: #ff00ff !important; /* pink color */
   z-index: 9999 !important;   /* on top of other elements */
+}
+#menu_container::before {
+  content: "";
+  position: absolute;
+  top: 100% !important;        /* lower line (adjust %) */
+  left: 0 !important;
+  width: 100% !important;
+  height: 2px !important;
+  background-color: #ff00ff !important;
+  z-index: 9999 !important;
 }
 
 #overall_result_container {
