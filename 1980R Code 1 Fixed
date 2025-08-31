@@ -1646,6 +1646,26 @@ form[name="running mate"] select:focus {
   padding: 10px !important;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
 }
+#menu_container::after {
+  content: "";
+  position: absolute;
+  top: 47.5% !important;        /* vertical halfway */
+  left: 0 !important;         /* start at left edge */
+  width: 100% !important;     /* full width */
+  height: 2px !important;    /* thin line */
+  background-color: #ff00ff !important; /* pink color */
+  z-index: 9999 !important;   /* on top of other elements */
+}
+#menu_container::before {
+  content: "";
+  position: absolute;
+  top: 100% !important;        /* lower line (adjust %) */
+  left: 0 !important;
+  width: 100% !important;
+  height: 2px !important;
+  background-color: #ff00ff !important;
+  z-index: 9999 !important;
+}
 #map_container {
   width: 100% !important;     
   max-width: 100% !important;
@@ -2231,5 +2251,3 @@ document.head.appendChild(style);
 quotes = ["“Mr. Gorbachev, tear down this wall!” ~ Ronald Reagan", "“The nine most terrifying words in the English language are: I'm from the Government, and I'm here to help.” ~ Ronald Reagan", "“There you go again” ~ Ronald Reagan", "“Are you better off now than you were four years ago?” ~ Ronald Reagan", "“I'll never tell a lie.” ~ Jimmy Carter", "“I've looked on many women with lust. I've committed adultery in my heart many times. ~ Jimmy Carter”", "“We cannot be both the world's leading champion of peace and the world's leading supplier of the weapons of war.” ~ Jimmy Carter", "“It just isn’t going to work; what I call a voodoo economic policy. ~ George H.W. Bush", "“I'm conservative, but I'm not a nut about it.” ~ George H.W. Bush", "“The work goes on, the cause endures, the hope still lives and the dream shall never die.” ~ Ted Kennedy", "“The only way you can decrease taxes, balance the budget, and increase military spending is with mirrors.” ~ John B. Anderson"]
 
 customquote = quotes[Math.floor((Math.random() * quotes.length))]
-
-
