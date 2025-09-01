@@ -43,7 +43,7 @@ campaignTrail_temp.player_answers = [];
 campaignTrail_temp.player_visits = [];
 campaignTrail_temp.answer_feedback_flg = 1;
 campaignTrail_temp.game_start_logging_id = '4076762';
-campaignTrail_temp.global_parameter_json = JSON.parse("[{\"model\": \"campaign_trail.global_parameter\", \"pk\": 1, \"fields\": {\"vote_variable\": 1.0, \"max_swing\": 0.5, \"start_point\": 1.0, \"candidate_issue_weight\": 0.25, \"running_mate_issue_weight\": 0.1, \"issue_stance_1_max\": -0.55, \"issue_stance_2_max\": -0.3, \"issue_stance_3_max\": -0.15, \"issue_stance_4_max\": 0.15, \"issue_stance_5_max\": 0.3, \"issue_stance_6_max\": 0.55, \"global_variance\": 0.0125, \"state_variance\": 0.0125, \"question_count\": 1, \"default_map_color_hex\": \"#C9C9C9\", \"no_state_map_color_hex\": \"#999999\"}}]");
+campaignTrail_temp.global_parameter_json = JSON.parse("[{\"model\": \"campaign_trail.global_parameter\", \"pk\": 1, \"fields\": {\"vote_variable\": 1.0, \"max_swing\": 0.5, \"start_point\": 1.0, \"candidate_issue_weight\": 0.25, \"running_mate_issue_weight\": 0.1, \"issue_stance_1_max\": -0.55, \"issue_stance_2_max\": -0.3, \"issue_stance_3_max\": -0.15, \"issue_stance_4_max\": 0.15, \"issue_stance_5_max\": 0.3, \"issue_stance_6_max\": 0.55, \"global_variance\": 0.0125, \"state_variance\": 0.0125, \"question_count\": 32, \"default_map_color_hex\": \"#C9C9C9\", \"no_state_map_color_hex\": \"#999999\"}}]");
 e = campaignTrail_temp
 e.answer_count = 7;
 endingPicker = (out, totv, aa, quickstats) => {
@@ -803,538 +803,557 @@ const style = document.createElement('style');
 style.innerHTML = `
 /* === Setting Size of Game Window === */
 #main_content_area {
-  width: 100% !important;       /* full width of the page */
-  max-width: 100% !important;   /* prevent container max width restrictions */
-  height: 100% !important;       /* full height of the page */
-  max-height: 100% !important;   /* prevent container max height restrictions */
-  box-sizing: border-box;       /* include padding/borders in width */
-  margin: 0 auto !important;    /* center if needed, though full width */
+  width: 100% !important;       /* span the full width of the page */
+  max-width: 100% !important;   /* prevent container from exceeding full width */
+  height: 100% !important;      /* span the full height of the page */
+  max-height: 100% !important;  /* prevent container from exceeding full height */
+  box-sizing: border-box;       /* include padding and border in width/height calculation */
+  margin: 0 auto !important;    /* center container horizontally if smaller than page */
+  background-color: #f5f5f4 !important; /* light gray background color */
 }
 #game_window {
-  width: 960px !important;     /* Set your desired fixed width */
-  height: 660px !important;    /* Set your desired fixed height */
-  max-width: 960px !important; /* Prevent it from growing wider */
-  max-height: 660px !important;/* Prevent it from growing taller */
-  overflow: hidden !important; /* Hide any overflow to keep graphics tidy */
-  margin: 0 auto !important;   /* Center horizontally */
-  box-sizing: border-box !important; /* Ensure padding/border included in size */
+  width: 100% !important;          /* fill parent width */
+  height: 100% !important;         /* fill parent height */
+  max-width: 100% !important;      /* prevent overflow beyond parent */
+  max-height: 100% !important;     /* prevent overflow beyond parent */
+  overflow: hidden !important;     /* hide overflowing content */
+  margin: 0 auto !important;       /* center horizontally */
+  box-sizing: border-box !important; /* include padding/borders in size calculation */
 }
+
 #inner_window_question {
-  border: 2px solid #2ed573; /* keep your border */
-  box-sizing: border-box;     /* include border in size calculations */
-  width: auto;                /* or set max-width if you want */
-  height: 640px;               /* standard height */
-  max-height: 640px;           /* max height */
-  padding: 1rem;              /* add some padding so content doesn't touch border */
+  border: 0.2em solid #2ed573;    /* green border thickness and color */
+  box-sizing: border-box;          /* include padding and border in size calculation */
+  width: auto;                     /* width adjusts naturally to content */
+  height: 97% !important;          /* nearly full height of parent */
+  max-height: 97% !important;      /* prevent exceeding 97% of parent height */
+  padding: 1em;                    /* inner spacing */
 }
+
 .inner_inner_window {
-  height: calc(340px - 2rem); /* subtract the 1rem padding top + bottom (1rem * 2) */
-  overflow-y: auto;           /* scroll if content overflows vertically */
-  box-sizing: border-box;     /* include padding and border in size */
-  margin-bottom: -40px !important; /* adjust as needed */
+  height: calc(52% - 2em);         /* height relative to parent minus padding */
+  overflow-y: auto;                /* scroll vertically if content overflows */
+  box-sizing: border-box;          /* include padding and borders in height */
+  margin-bottom: -6% !important;   /* negative bottom margin to shift upward */
 }
+
 .inner_window_sign_display {
-  margin-top: 0px !important; /* adjust as needed */
+  margin-top: 0 !important;        /* remove top margin */
 }
+
 /* === Shared Title Formatting for ESTIMATED SUPPORT & STATE SUMMARY === */
 #state_info h3,
 #overall_result_container #overall_result h3 {
-  color: #2ed573 !important;
-  font-family: "Courier New", monospace !important;
-  font-size: 1.1em !important;
-  font-weight: bold !important;
-  text-decoration: underline !important;
-  letter-spacing: -0.5px !important;
-  margin-bottom: 6px !important;
-  background: none !important;
-  text-shadow: none !important;
-  position: relative;
-  z-index: 10 !important;
-  border: 0px solid #ff00ff !important
+  color: #2ed573 !important;          /* green text color */
+  font-family: "Courier New", monospace !important; /* monospaced font */
+  font-size: 110% !important;         /* slightly larger than normal text */
+  font-weight: bold !important;       /* bold text */
+  text-decoration: underline !important; /* underline text */
+  letter-spacing: -0.5% !important;  /* tighten spacing between letters */
+  margin-bottom: 0.6% !important;    /* space below heading */
+  background: none !important;        /* remove background */
+  text-shadow: none !important;       /* remove text shadow */
+  position: relative;                 /* establish positioning context */
+  z-index: 10 !important;             /* stack above lower z-index elements */
+  border: 0% solid #ff00ff !important; /* placeholder border, no visible effect */
 }
 
 /* === [Estimated Support Title Paragraph Text Styling] === */
 #overall_result_container #overall_result p {
-  color: #2ed573 !important;
-  font-family: "Courier New", monospace !important;
-  font-size: 1.0em !important;
-  line-height: 1.3em !important;
-  margin: 2px 0 5px 0 !important;
-  position: relative;
-  z-index: 0 !important;
-  text-shadow: none !important;
+  color: transparent !important;      /* hide paragraph text */
+  font-family: "Courier New", monospace !important; /* monospaced font */
+  font-size: 100% !important;         /* normal font size */
+  line-height: 130% !important;       /* spacing between lines */
+  margin: 0.2% 0 0.5% 0 !important;  /* top and bottom spacing */
+  position: relative;                 /* positioning context for children */
+  z-index: 0 !important;             /* stack behind other elements */
+  text-shadow: none !important;       /* remove any text shadow */
 }
 
 /* === [Estimated Support Title Container] === */
 #map_container {
-  width: 79% !important;        /* 720px ÷ 960px game window ≈ 75% */
-  max-width: 100% !important;   /* still prevent overflow */
-  position: relative !important;
-  left: -2.5% !important;       /* -25px ÷ 960px ≈ -2.5% */
+  width: 79% !important;         /* container width relative to parent */
+  max-width: 100% !important;    /* prevent overflow beyond parent */
+  position: relative !important; /* positioning context for inner elements */
+  left: -2.5% !important;        /* shift left slightly */
+  top: 2.5% !important;          /* shift down slightly */
 }
 
 #map_container svg {
-  width: 100% !important;       /* SVG scales with container */
-  height: auto !important;      /* keep aspect ratio */
+  width: 100% !important;        /* SVG scales with container width */
+  height: auto !important;       /* maintain aspect ratio */
 }
 
 #menu_container {
   position: relative !important;    
   width: 20% !important;              
   height: 65% !important;
-  margin-top: -45% !important;        /* lowered slightly from before */
-  margin-left: 79% !important;        /* slightly shifted right */
-  z-index: 10 !important;
-  background-color: #0f0f2a !important;  /* navy purple background */
-  border: 2px solid #ff00ff !important; /* removed pink */
+  margin-top: -45% !important;       /* adjust vertical placement */
+  margin-left: 79% !important;       /* horizontal placement within parent */
+  z-index: 10 !important;            /* stacking context */
+  background-color: #0f0f2a !important; /* dark navy-purple background */
+  border: 2px solid #ff00ff !important; /* magenta border */
   padding: 1% !important;           
-  box-shadow: 0 0.2% 0.6% rgba(0,0,0,0.2) !important;
+  box-shadow: 0 0.2% 0.6% rgba(0,0,0,0.2) !important; /* subtle shadow for depth */
 }
-#menu_container::after {
-  content: "";
-  position: absolute;
-  top: 47.5% !important;        /* vertical halfway */
-  left: 0 !important;         /* start at left edge */
-  width: 100% !important;     /* full width */
-  height: 2px !important;    /* thin line */
-  background-color: #ff00ff !important; /* pink color */
-  z-index: 9999 !important;   /* on top of other elements */
-}
+
 #menu_container::before {
-  content: "";
+  content: "";                       /* pseudo-element for decorative line */
   position: absolute;
-  top: 100% !important;        /* lower line (adjust %) */
+  top: 100% !important;              /* position below container */
   left: 0 !important;
-  width: 100% !important;
-  height: 2px !important;
-  background-color: #ff00ff !important;
-  z-index: 9999 !important;
+  width: 100% !important;            /* full width */
+  height: 2px !important;            /* line thickness */
+  background-color: #ff00ff !important; /* magenta line color */
+  z-index: 9999 !important;          /* appear above most content */
 }
 
 #overall_result_container {
-  height: 50%;
-  width: 100%;
-  background-color: #0f0f2a !important;  
-  z-index: 9999 !important;
-  position: relative;
-  border: 0 solid transparent !important; /* removed pink */
+  height: 50%;                        /* half the parent container height */
+  width: 100%;                         /* full width */
+  background-color: #0f0f2a !important; /* dark background */
+  z-index: 9999 !important;           /* on top of most elements */
+  position: relative;                  /* positioning context */
+  border: 0 solid transparent !important; /* invisible border placeholder */
+  padding-bottom: 1em !important;      /* space at bottom */
 }
 
-#overall_result {
-  height: 50%;
-  width: 100%;
-  background-color: #0f0f2a !important;  
-  z-index: -9999 !important;
-  position: relative;
-  border: transparent !important;
+#overall_result_container #overall_result {
+  background-color: #0f0f2a !important; /* dark background */
+  padding: 5% 0 0 0 !important;          /* top padding only */
+  border-radius: 0.5em !important;       /* rounded corners */
+  border: 0em solid #ff00ff !important;  /* invisible border placeholder */
+  width: 75% !important;                 /* container width relative to parent */
+  min-height: 42.5% !important;          /* minimum height */
+  box-sizing: border-box !important;     /* include padding/border in size calculation */
 }
 
 /* === [Estimated Support Body Text Styling] === */
 #switchingEst {
-  display: block !important;
-  width: 95% !important;               
-  margin-left: 2.5% !important;        
-  margin-top: 0.4% !important;
-  line-height: 1.35em !important;
-  color: #2ed573 !important;
-  font-family: "Courier New", monospace !important;
-  font-size: 0.85em !important;
-  z-index: 9999 !important;
-  position: relative;
+  display: block !important;         /* block-level element */
+  width: 95% !important;             /* nearly full width */
+  margin-left: 2.5% !important;      /* horizontal offset to center */
+  margin-top: 0.4% !important;       /* vertical spacing above element */
+  line-height: 1.35em !important;    /* line spacing */
+  color: #2ed573 !important;         /* green text color */
+  font-family: "Courier New", monospace !important; /* monospaced font */
+  font-size: 0.85em !important;      /* slightly smaller font */
+  z-index: 9999 !important;          /* stacked above most elements */
+  position: relative;                /* relative positioning */
 }
 
 #switchingEst b {
-  font-weight: bold !important;
-  color: #2ed573 !important;
-  margin-left: 0.2% !important;
-  margin-top: 0.8% !important;
+  font-weight: bold !important;      /* bold text */
+  color: #2ed573 !important;         /* green text */
+  margin-left: 0.2% !important;      /* small left spacing */
+  margin-top: 0.8% !important;       /* small top spacing */
 }
 
 /* === [Estimated Support Button Styling] === */
 #pvswitcher,
 #ev_est {
-  margin-top: 0.4% !important;
-  margin-right: 0.4% !important;
-  padding: 0.3% 0.8% !important;
-  font-family: "Courier New", monospace !important;
-  font-size: 1.0em !important;
-  color: #fff !important;
-  background-color: #2ed573 !important;
-  border: 0.1% solid #1fa463 !important;
-  border-radius: 0.4% !important;
-  cursor: pointer !important;
-  z-index: 9999 !important;
-  position: relative;
+  margin-top: 0.4% !important;       /* vertical spacing */
+  margin-right: 0.4% !important;     /* right spacing */
+  padding: 0.3% 0.8% !important;     /* internal padding */
+  font-family: "Courier New", monospace !important; /* monospaced font */
+  font-size: 1.0em !important;       /* normal size */
+  color: #fff !important;            /* white text */
+  background-color: #2ed573 !important; /* green button background */
+  border: 0.1% solid #1fa463 !important; /* darker green border */
+  border-radius: 0.4% !important;    /* rounded corners */
+  cursor: pointer !important;        /* pointer on hover */
+  z-index: 9999 !important;          /* above other elements */
+  position: relative;                /* relative positioning */
 }
 
 #pvswitcher:hover,
 #ev_est:hover {
-  background-color: #38ff94 !important;
-  color: #000 !important;
-  border-color: #2bd97f !important;
+  background-color: #38ff94 !important; /* bright green on hover */
+  color: #000 !important;               /* black text on hover */
+  border-color: #2bd97f !important;     /* border color change on hover */
 }
 
 /* === State Summary Container === */
 body #menu_container #state_result_container {
-  height: 50%;
-  width: 98% !important;               
-  background-color: #0f0f2a !important; 
-  border-radius: 5% !important;
-  position: relative !important;
-  z-index: 9999 !important;
-  border: 0 solid transparent !important; /* removed pink */
-  box-sizing: border-box;
-  margin-left: 0.8% !important;       /* tiny offset to center */
+  height: 50%;                       /* half height of parent container */
+  width: 98% !important;             /* nearly full width */
+  background-color: #0f0f2a !important; /* dark background */
+  border-radius: 5% !important;      /* rounded corners */
+  position: relative !important;     /* positioning context */
+  z-index: 9999 !important;          /* stack above most elements */
+  border: 0 solid transparent !important; /* invisible border placeholder */
+  box-sizing: border-box;            /* include padding and border in size calculation */
+  margin-left: 0.8% !important;     /* tiny left offset for centering */
 }
 
 #state_result_container #state_result {
-  background-color: #0f0f2a !important; 
-  border-radius: 0.8% !important;
-  border: 0 solid transparent !important; /* removed pink */
-  padding: 0.8% !important;
-  margin-top: 0.5% !important;
+  background-color: #0f0f2a !important; /* dark background */
+  border-radius: 0.8% !important;       /* slightly rounded corners */
+  border: 0 solid transparent !important; /* invisible border placeholder */
+  padding: 0.8% !important;            /* internal spacing */
+  margin-top: 0.5% !important;         /* top spacing */
 }
 
-#state_result_container #state_result h3 {
-  color: #2ed573 !important;
-  font-family: "Orbitron", sans-serif !important;
-  font-size: 1.3em !important;
-  font-weight: 800 !important;
-  font-style: normal !important;
-  margin-bottom: 0.6% !important;
-  letter-spacing: 0.2em !important;
-  text-shadow: 0 0 0.6% #00ffea !important;
-  border: 0 solid transparent !important; /* removed pink */
+body #menu_container #state_result_container #state_result h3 {
+  color: #2ed573 !important;           /* green text */
+  font-family: "Courier New", monospace !important; /* monospaced */
+  font-size: 1.1em !important;         /* slightly larger font */
+  font-weight: bold !important;        /* bold heading */
+  text-decoration: underline;          /* underline text */
+  letter-spacing: -0.031em !important; /* slight tightening of letters */
+  margin-bottom: 0.5em !important;     /* spacing below heading */
+  margin-top: -0.5em !important;       /* spacing above heading */
+  position: relative !important;       /* relative for pseudo-element */
+  display: inline-block !important;    /* inline block for layout control */
+  background: none !important;         /* remove background */
+  text-shadow: none !important;        /* remove shadow */
+  z-index: 10 !important;              /* stacking context */
+}
+
+/* wider pink border line */
+body #menu_container #state_result_container #state_info h3::before {
+  content: "" !important;             /* pseudo-element decorative line */
+  position: absolute !important;      /* position relative to heading */
+  top: -1em !important;               /* above heading */
+  left: -0.9em !important;            /* extend left slightly */
+  right: -0.9em !important;           /* extend right slightly */
+  border-top: 0.15em solid #ff00ff !important; /* pink top border line */
 }
 
 #state_result_container #state_result p {
-  color: #ffa07a !important;
-  margin-top: 0.2% !important;
-  padding: 0 !important;
-  line-height: 1.75 !important;
-  font-family: "Courier New", monospace !important;
-  font-weight: 900 !important;
-  font-size: 1em !important;
-  font-style: italic !important;
-  text-shadow: 0 0 0.3% #ffa07a !important;
+  color: #ffa07a !important;          /* salmon colored text */
+  margin-top: 0.2% !important;        /* spacing above paragraph */
+  padding: 0 !important;              /* no inner padding */
+  line-height: 1.75 !important;       /* spacing between lines */
+  font-family: "Courier New", monospace !important; /* monospaced font */
+  font-weight: 900 !important;        /* very bold text */
+  font-size: 1em !important;          /* normal size */
+  font-style: italic !important;      /* italic text */
+  text-shadow: 0 0 0.3% #ffa07a !important; /* subtle glow effect */
 }
 
 #state_result_container #state_result ul li {
-  color: #ff69b4 !important;
-  font-family: "Courier New", monospace !important;
-  font-size: 1em !important;
-  font-weight: 900 !important;
-  margin-top: 0.4% !important;
-  margin-left: 0 !important;
-  padding-left: 1% !important;
-  line-height: 1 !important;
-  text-shadow: 0 0 0.4% #ff69b4 !important;
+  color: #ff69b4 !important;          /* pink text */
+  font-family: "Courier New", monospace !important; /* monospaced font */
+  font-size: 1em !important;          /* normal size */
+  font-weight: 900 !important;        /* very bold */
+  margin-top: 0.4% !important;        /* spacing above list item */
+  margin-left: 0 !important;          /* no left margin */
+  padding-left: 1% !important;        /* left padding for indent */
+  line-height: 1 !important;          /* tight line spacing */
+  text-shadow: 0 0 0.4% #ff69b4 !important; /* subtle glow effect */
 }
 
 /* === Remove default backgrounds from text blocks === */
 #state_info,
 #switchingEst {
-  background: none !important;
-  padding: 0 !important;
-  border: none !important;
+  background: none !important;        /* remove background */
+  padding: 0 !important;              /* remove padding */
+  border: none !important;             /* remove border */
 }
 
 /* === State & Support Inner Text === */
 #state_info p,
 #state_info p *,
 #switchingEst {
-  color: #e07cff !important;
-  font-family: "Courier New", monospace !important;
-  font-size: 0.95em !important;
-  font-weight: normal !important;
-  line-height: 1.5 !important;
-  margin: 0.2% 0 !important;
+  color: #e07cff !important;           /* purple text color */
+  font-family: "Courier New", monospace !important; /* monospaced */
+  font-size: 0.95em !important;        /* slightly smaller than normal */
+  font-weight: normal !important;     /* normal weight */
+  line-height: 1.5 !important;        /* line spacing */
+  margin: 0.2% 0 !important;          /* vertical spacing */
 }
 
 /* === State Issues Formatting === */
 ul li[id^="issue_"] {
-  color: #ffe066 !important;
-  font-family: "Courier New", monospace !important;
-  font-size: 0.95em !important;
-  font-style: italic !important;
-  font-weight: normal !important;
-  margin: 0.2% 0 !important;
+  color: #ffe066 !important;          /* yellow text for issues */
+  font-family: "Courier New", monospace !important; /* monospaced */
+  font-size: 0.95em !important;        /* slightly smaller than normal */
+  font-style: italic !important;      /* italic text */
+  font-weight: normal !important;     /* normal weight */
+  margin: 0.2% 0 !important;          /* vertical spacing */
 }
 
 /* === Campaign Sign Styling === */
 #campaign_sign {
-  background-color: #111 !important;
-  border-color: #2ed573 !important;
-  font-family: "Courier New", monospace !important;
-  font-size: 0.85em !important;
-  color: #2ed573 !important;
-  font-weight: bold !important;
-  line-height: 1.3em !important;
-  position: relative;
-  top: 13px; /* Adjust this value to lower more or less */
+  background-color: #111 !important;       /* dark background for sign */
+  border-color: #2ed573 !important;        /* neon green border */
+  font-family: "Courier New", monospace !important; /* monospace text */
+  font-size: 0.85em !important;            /* smaller font size */
+  color: #2ed573 !important;               /* neon green text color */
+  font-weight: bold !important;            /* bold text */
+  line-height: 1.3em !important;           /* spacing between lines */
+  position: relative;                      /* positioning relative to container */
+  top: 13px;                               /* vertical offset within container */
 }
 
 /* === Progress Bar Just Below Map === */
 #map_footer {
-  margin-top: -42px !important;
-  margin-left: -200px !important;
-  z-index: 2 !important;
-  position: absolute;
+  margin-bottom: 1% !important;           /* space below map footer */
+  margin-left: 0% !important;             /* left alignment */
+  z-index: 2 !important;                  /* stacking order */
+  position: absolute;                      /* absolute positioning */
 }
 
 /* === Progress Bar Buttons === */
 #map_footer button {
-  font-family: "Courier New", monospace !important;
-  font-size: 0.9em !important;
-  font-weight: bold !important;
-  background-color: #2ed573 !important;
-  color: #000 !important;
-  border: 1px solid #22c36c !important;
-  padding: 5px 10px !important;
-  border-radius: 2px !important;
-  cursor: pointer !important;
-  position: relative;
-  z-index: 3;
+  font-family: "Courier New", monospace !important; /* monospace for buttons */
+  font-size: 0.85em !important;           /* smaller button text */
+  font-weight: bold !important;           /* bold text */
+  background-color: #2ed573 !important;   /* green background */
+  color: #000 !important;                 /* black text */
+  border: 1px solid #22c36c !important;  /* border color */
+  padding: 0.8% 1.6% !important;          /* spacing inside button */
+  border-radius: 2px !important;          /* slightly rounded corners */
+  cursor: pointer !important;             /* pointer on hover */
+  position: relative;                      /* relative for internal positioning */
+  z-index: 3;                              /* stack above map footer */
 }
 
 #map_footer button:hover {
-  background-color: #4be584 !important;
+  background-color: #4be584 !important;   /* lighter green on hover */
 }
 
 /* === Navigation Buttons (Continue, Latest Polls/Electoral Map) === */
 #answer_select_button {
-  font-family: "Impact", Charcoal, sans-serif !important;
-  font-size: 1em !important;
-  color: #fff !important;
-  background-color: #cc3399 !important;
-  border: 2px solid #1e90ff !important;
-  padding: 8px 16px !important;
-  margin: 4px !important;
-  border-radius: 5px !important;
-  cursor: pointer !important;
-  box-shadow: none !important;
-  transition: background-color 0.2s ease-in-out !important;
-  position: absolute !important;
-  z-index: 4;
-  /* Moved further right and down */
-  top: 308px !important; 
-  left: 335px !important;
+  font-family: "Impact", Charcoal, sans-serif !important; /* bold display font */
+  font-size: 1em !important;             /* scalable text size */
+  color: #fff !important;                /* white text */
+  background-color: #cc3399 !important;  /* magenta background */
+  border: 0.15em solid #1e90ff !important; /* blue border */
+  padding: 0.6em 1.2em !important;       /* internal spacing */
+  margin: 0.3em !important;              /* external spacing */
+  border-radius: 0.35em !important;      /* rounded corners */
+  cursor: pointer !important;            /* pointer on hover */
+  box-shadow: none !important;           /* remove shadow */
+  transition: background-color 0.2s ease-in-out !important; /* smooth hover effect */
+  position: absolute !important;         /* absolute positioning */
+  z-index: 4;                             /* above other elements */
+  top: 102% !important;                  /* vertical placement below reference */
+  left: 36% !important;                  /* horizontal placement */
 }
 
 #view_electoral_map {
-  font-family: "Impact", Charcoal, sans-serif !important;
-  font-size: 1em !important;
-  color: #fff !important;
-  background-color: #cc3399 !important;
-  border: 2px solid #1e90ff !important;
-  padding: 8px 16px !important;
-  margin: 4px !important;
-  border-radius: 5px !important;
-  cursor: pointer !important;
-  box-shadow: none !important;
-  transition: background-color 0.2s ease-in-out !important;
-  position: absolute !important;
-  z-index: 4;
-  /* Moved further right and down */
-  top: 308px !important;
-  left: 435px !important;
+  font-family: "Impact", Charcoal, sans-serif !important; /* bold display font */
+  font-size: 1em !important;             /* scalable text */
+  color: #fff !important;                /* white text */
+  background-color: #cc3399 !important;  /* magenta background */
+  border: 0.15em solid #1e90ff !important; /* blue border */
+  padding: 0.6em 1.2em !important;       /* internal spacing */
+  margin: 0.3em !important;              /* external spacing */
+  border-radius: 0.35em !important;      /* rounded corners */
+  cursor: pointer !important;            /* pointer on hover */
+  box-shadow: none !important;           /* remove shadow */
+  transition: background-color 0.2s ease-in-out !important; /* smooth hover effect */
+  position: absolute !important;         /* absolute positioning */
+  z-index: 4;                             /* above other elements */
+  top: 102% !important;                  /* vertical placement */
+  left: 45.5% !important;                /* horizontal placement */
 }
 
 #answer_select_button:hover,
 #view_electoral_map:hover {
-  background-color: #1e90ff !important;
-  color: #fff !important;
+  background-color: #1e90ff !important;  /* blue on hover */
+  color: #fff !important;                /* keep text white */
 }
 
 /* === Question Number Box Styling (Small + Lowered Further) === */
 #question_number {
-  font-size: 0.6em !important;
-  padding: 1px 5px !important;
-  margin: 6px 4px !important;
-  height: 14px !important;
-  font-family: "Courier New", monospace !important;
-  color: #2ed573 !important;
-  background-color: #111 !important;
-  border-radius: 4px !important;
-  font-weight: bold !important;
-  position: relative;
-  top: 22px; /* Slightly lower than last time */
+  font-size: 0.6em !important;           /* smaller text */
+  padding: 0.0625em 0.3125em !important; /* internal padding */
+  margin: 0.375em 0.25em !important;      /* external margin */
+  height: 0.875em !important;            /* box height */
+  font-family: "Courier New", monospace !important; /* monospace text */
+  color: #2ed573 !important;             /* green text */
+  background-color: #111 !important;     /* dark background */
+  border-radius: 0.25em !important;      /* slightly rounded corners */
+  font-weight: bold !important;          /* bold text */
+  position: relative;                     /* relative positioning */
+  top: 3.25% !important;                 /* vertical offset */
 }
 
 /* === Progress Bar Styling (Small + Lowered Further) === */
 #progress_bar {
-  background-color: #000033;
-  padding: 6px 14px;
-  border: 2px solid #00ffff;
-  border-radius: 4px;
-  box-shadow: 0 0 5px #00ffff;
-  text-align: center;
-  margin-bottom: 20px;
-  position: relative;
-  top: 26px; /* Slightly lower than last time */
+  background-color: #000033;             /* dark blue background */
+  padding: 0.375em 0.875em;              /* internal padding */
+  border: 0.125em solid #00ffff;         /* cyan border */
+  border-radius: 0.25em;                  /* rounded corners */
+  box-shadow: 0 0 0.3125em #00ffff;      /* glowing border effect */
+  text-align: center;                     /* center text */
+  margin-top: 3.5em;                      /* spacing above */
+  margin-bottom: 0em;                     /* no spacing below */
+  position: relative;                     /* relative positioning */
+  top: 3.25%;                             /* vertical offset */
 }
 
 #progress_bar h3 {
-  margin: 0;
-  font-size: 0.9rem;
-  font-family: 'Courier New', Courier, monospace;
-  color: #00ffff;
-  text-shadow: 0 0 1.5px #00ffff;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  margin: 0;                              /* remove default margin */
+  font-size: 1.0em;                       /* scale with container */
+  font-family: 'Courier New', Courier, monospace; /* monospace heading */
+  color: #00ffff;                         /* cyan text */
+  text-shadow: 0 0 0.09375em #00ffff;    /* subtle glowing text */
+  letter-spacing: 0.0625em;               /* spacing between letters */
+  text-transform: uppercase;              /* uppercase text */
 }
 
 /* === Question Prompt Styling === */
 .inner_inner_window h3 {
-  font-family: "Arial Black", Gadget, sans-serif !important;
-  font-size: 1.15em !important;
-  color: #46d2b4 !important;
-  text-align: center !important;
-  margin-bottom: 14px !important;
-  line-height: 1.32em !important;
+  font-family: "Arial Black", Gadget, sans-serif !important; /* bold font */
+  font-size: 1.15em !important;         /* larger heading */
+  color: #46d2b4 !important;            /* teal text */
+  text-align: center !important;        /* centered heading */
+  margin-bottom: 0.875em !important;    /* spacing below heading */
+  line-height: 1.32em !important;       /* line spacing */
 }
 
 /* === Fixed Answer Section Box with Scroll === */
 #question_form {
-  height: 200px !important;
-  max-height: 220px !important;
-  overflow-y: auto !important;
-  padding: 5px 10px 0px 10px !important;
-  border: 1px solid #ccc !important;
-  border-radius: 5px !important;
-  background-color: #fdfdfd !important;
-  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.05) !important;
+  height: 100% !important;              /* fill container height */
+  min-height: 15em !important;          /* minimum height before scroll */
+  overflow-y: auto !important;          /* vertical scroll if content overflows */
+  overflow-x: hidden !important;        /* hide horizontal scroll */
+  padding: 0.3125em 0.625em 0 0.625em !important; /* internal padding */
+  border-top: 0.156em solid #ccc !important;      /* top border */
+  border-left: 0.156em solid #ccc !important;     /* left border */
+  border-right: 0.156em solid #ccc !important;    /* right border */
+  border-bottom: 0.156em solid #ccc !important;   /* bottom border */
+  border-radius: 0.781em !important;              /* rounded corners */
+  background-color: #fdfdfd !important;           /* light background */
+  box-shadow: inset 0 0 0.469em rgba(0, 0, 0, 0.05) !important; /* subtle inset shadow */
+  box-sizing: border-box !important;             /* include borders/padding in width/height */
 }
 
-/* === Answer Text Labels (Tighter + Cleaned) === */
 #question_form label {
-  font-family: "Verdana", Geneva, sans-serif !important;
-  font-size: 0.9em !important;
-  font-weight: 600 !important;
-  color: #36454F !important;
-  line-height: 1.1em !important;
-  cursor: pointer !important;
-  display: block !important;
-  margin-left: 27px !important;
-  margin-top: -9px !important;
-  margin-bottom: -20px !important;
-  position: relative !important;
-  top: -4px !important;
-  background: none !important;
-  border: none !important;
-  padding: 0 !important;
+  font-family: "Verdana", Geneva, sans-serif !important; /* clean sans-serif text */
+  font-size: 0.9em !important;          /* slightly smaller text */
+  font-weight: 600 !important;          /* semi-bold */
+  color: #36454F !important;            /* dark grey text */
+  line-height: 1.1em !important;        /* spacing between lines */
+  cursor: pointer !important;           /* pointer on hover */
+  display: block !important;            /* block layout for each label */
+  margin-left: 1.6875% !important;      /* horizontal spacing from left */
+  margin-top: -0.5625em !important;     /* small upward adjustment */
+  margin-bottom: -1.25em !important;    /* small downward adjustment */
+  position: relative !important;        /* relative positioning */
+  top: -0.5em !important;               /* nudge label upwards */
+  left: 0.75em !important;              /* nudge label right */
+  background: none !important;          /* remove background */
+  border: none !important;              /* remove border */
+  padding: 0 !important;                /* remove padding */
 }
 
 /* === Radio Buttons === */
 input[type="radio"].game_answers {
-  appearance: none !important;
-  width: 14px !important;
-  height: 14px !important;
-  border: 1px solid #ff3366 !important;
-  background-color: #fff !important;
-  border-radius: 2px !important;
-  margin-right: 6px !important;
-  margin-top: 6px !important;
-  margin-left: 6px !important;
-  vertical-align: middle !important;
+  appearance: none !important;          /* remove default radio styling */
+  width: 1.05em !important;             /* button width */
+  height: 1.05em !important;            /* button height */
+  border: 0.078em solid #ff3366 !important; /* pink border */
+  background-color: #fff !important;    /* white background */
+  border-radius: 0.156em !important;    /* rounded edges */
+  margin-right: 0.468em !important;     /* spacing to right */
+  margin-top: 0.468em !important;       /* spacing above */
+  margin-left: 0.468em !important;      /* spacing to left */
+  vertical-align: middle !important;    /* align with text */
 }
 
 input[type="radio"].game_answers:checked {
-  background-color: #ff3366 !important;
-  box-shadow: inset 0 0 0 2px #fff !important;
+  background-color: #ff3366 !important; /* pink when selected */
+  box-shadow: inset 0 0 0 2px #fff !important; /* inner white ring */
 }
 
 /* === Advisor Feedback Modal === */
 #visit_content h3 {
-  font-family: "Arial Black", Gadget, sans-serif !important;
-  font-size: 1.2em !important;
-  color: #ff33cc !important;
-  text-align: center !important;
+  font-family: "Arial Black", Gadget, sans-serif !important; /* bold heading */
+  font-size: 1.2em !important;            /* larger heading */
+  color: #ff33cc !important;              /* magenta text */
+  text-align: center !important;          /* centered heading */
 }
 
 /* === Advisor Feedback Scrollable Body === */
 #visit_content {
-  width: 477.5px;
-  height: 322.5px;
-  box-sizing: border-box;
-  padding: 1rem;
-  margin-bottom: -20px !important; /* keep your correction */
-  overflow-y: auto;
-  background-color: #fff;
-  border: 2px solid #2ed573;
-  border-radius: 8px;
-  box-shadow: 0 0 0 1px rgba(46, 213, 115, 0.3); /* glow-like effect */
+  width: 100%;                            /* full container width */
+  height: 44.06%;                          /* relative height for modal */
+  box-sizing: border-box;                  /* include padding/borders in sizing */
+  padding: 1em;                            /* internal spacing */
+  margin-bottom: -1.25em !important;      /* negative bottom spacing */
+  overflow-y: auto;                        /* vertical scroll if needed */
+  background-color: #fff;                  /* white background */
+  border: 0.156em solid #2ed573;           /* green border */
+  border-radius: 1em;                       /* rounded corners */
+  box-shadow: 0 0 0 0.125em rgba(46, 213, 115, 0.3); /* subtle glow border */
 }
 
 /* === Advisor Feedback Text Body === */
 #visit_content p {
-  font-family: "Verdana", Geneva, sans-serif !important;
-  font-size: 0.95em !important;
-  color: #36454F !important;
-  line-height: 1.35em !important;
-  padding: 4px 8px !important; /* reduced vertical padding for smaller height */
-  margin: 4px 0 !important; /* reduced vertical spacing */
+  font-family: "Verdana", Geneva, sans-serif !important; /* clean sans-serif text */
+  font-size: 0.95em !important;         /* slightly smaller text */
+  color: #36454F !important;            /* dark grey text */
+  line-height: 1.35em !important;       /* line spacing */
+  padding: 0.25em 0.5em !important;     /* internal spacing */
+  margin: 0.25em 0 !important;          /* vertical spacing between paragraphs */
 }
 
-/* === Advisor Feedback Buttons === */
+/* === Advisor Feedback Buttons (Larger & Lowered) === */
 #ok_button,
 #no_feedback_button {
-  font-family: "Arial Black", Gadget, sans-serif !important;
-  font-size: 0.8em !important;                /* Smaller text */
-  font-weight: bold !important;
-  color: #00ffff !important;
-  background-color: #111 !important;
-  border: 1.5px solid #00ffff !important;     /* Slightly thinner border */
-  border-radius: 5px !important;              /* Slightly smaller radius */
-  height: 26px !important;                    /* Reduced height */
-  text-align: center !important;
-  padding: 2px 8px !important;                /* Less padding */
-  white-space: nowrap !important;
-  max-width: 200px !important;                /* Reduced max width */
+  font-family: "Arial Black", Gadget, sans-serif !important; /* bold font */
+  font-size: 1em !important;            /* text size */
+  font-weight: bold !important;         /* bold text */
+  color: #00ffff !important;            /* cyan text */
+  background-color: #111 !important;    /* dark background */
+  border: 0.125em solid #00ffff !important; /* cyan border */
+  border-radius: 0.375em !important;    /* rounded corners */
+  height: 2em !important;               /* button height */
+  text-align: center !important;        /* center text */
+  padding: 0.25em 0.75em !important;    /* internal padding */
+  white-space: nowrap !important;       /* prevent text wrapping */
+  max-width: 14em !important;           /* limit button width */
 }
 
 #ok_button {
-  margin-top: 25px !important;                /* Smaller margin */
-  margin-bottom: 2px !important;             /* Add bottom margin to tighten spacing */
+  margin-top: 2em !important;           /* spacing above button */
+  margin-bottom: 0.25em !important;    /* spacing below */
 }
 
 #no_feedback_button {
-  margin-top: 25px !important;                /* Bring even closer */
-  margin-bottom: 2px !important;            /* Keep tight at bottom */
+  margin-top: 2em !important;           /* spacing above button */
+  margin-bottom: 0.25em !important;    /* spacing below */
 }
 
 #visit_buttons {
-  display: flex;
-  justify-content: center;   /* center horizontally */
-  gap: 12px;                 /* space between buttons */
-  padding-top: 10px;         /* optional, for some space above */
+  display: flex;                         /* flex layout for buttons */
+  justify-content: center;               /* center horizontally */
+  gap: 1em;                              /* space between buttons */
+  padding-top: 1em;                      /* spacing above buttons */
 }
 
 #confirm_visit_button {
-  position: relative;
-  left: -8px;    /* move left */
-  top: 18px;      /* move down */
+  position: relative;                    /* relative positioning */
+  left: -0.5em;                          /* nudge left */
+  top: 1.25em;                           /* nudge down */
 }
 
 #no_visit_button {
-  position: relative;
-  left: 8px;     /* move right */
-  top: 18px;     /* nudge up */
+  position: relative;                    /* relative positioning */
+  left: 0.5em;                           /* nudge right */
+  top: 1.25em;                           /* nudge down */
 }
+
 #game_window .visit_text {
-  position: absolute;
-  top: 530px; /* distance from the top of #game_window */
-  z-index: 5; /* make sure it’s above other elements */
+  position: absolute;                     /* absolute positioning */
+  top: 87%;                               /* vertical placement in container */
+  z-index: 5;                             /* place above other elements */
 }
+
 .visit_text font {
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 1.0em !important;
-  color: #32c864 !important;
-  line-height: 1.0em !important;
-  margin: 12px 16px !important;
-  max-width: 600px !important;
-  text-shadow: 0 0 1px #00ffaa !important;
-  letter-spacing: -0.02em !important; /* slightly smaller letter spacing */
+  font-family: "Courier New", Courier, monospace !important; /* monospace text */
+  font-size: 1.0em !important;           /* text size */
+  color: #32c864 !important;             /* green text */
+  line-height: 1.0em !important;         /* line height */
+  margin: 1.82% 1.67% !important;        /* spacing around text */
+  max-width: 62.5% !important;           /* constrain width */
+  text-shadow: 0 0 1px #00ffaa !important; /* subtle glow effect */
+  letter-spacing: -0.02em !important;   /* adjust spacing between letters */
 }
 `;
 document.head.appendChild(style);
